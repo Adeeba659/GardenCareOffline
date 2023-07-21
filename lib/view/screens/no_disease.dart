@@ -1,25 +1,19 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import '../widgets/bottomNavBar.dart';
 import '../../utils/theme.dart';
-import '../widgets/crousel.dart';
-import '../../models/plant.dart';
-import '../../data/data.dart';
+import 'package:get/get.dart';
 
 class NoDisease extends StatelessWidget {
   final Uint8List imageFile;
+  String plantName;
 
-  NoDisease({required this.imageFile});
+  NoDisease({required this.imageFile, required this.plantName});
 
   @override
   Widget build(BuildContext context) {
-    Plant plant_detail = plantDataList[0];
+    //print(plantName);
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('Image Display'),
-      //   backgroundColor: primaryColor,
-      // ),
       body: Column(
         children: [
           Expanded(
@@ -31,9 +25,9 @@ class NoDisease extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    SizedBox(height: 30),
+                    SizedBox(height: 50),
                     Text(
-                      'No Disease Present!',
+                      'No Disease Present!'.tr,
                       style: TextStyle(
                         fontSize: 20,
                         fontFamily: fontName,
@@ -45,7 +39,7 @@ class NoDisease extends StatelessWidget {
                       height: 10,
                     ),
                     Text(
-                      'Tomato',
+                      plantName.tr,
                       style: TextStyle(
                         fontSize: 30,
                         fontFamily: fontName,
@@ -54,11 +48,6 @@ class NoDisease extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      // decoration: BoxDecoration(
-                      //     border: Border.all(
-                      //       color: primaryColor,
-                      //     ),
-                      //     borderRadius: BorderRadius.all(Radius.circular(20))),
                       margin: EdgeInsets.all(10),
                       padding: EdgeInsets.all(10),
                       height: 250,

@@ -1,11 +1,8 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import '../widgets/bottomNavBar.dart';
 import '../../utils/theme.dart';
-import '../widgets/crousel.dart';
-import '../../models/plant.dart';
-import '../../data/data.dart';
+import 'package:get/get.dart';
 
 class NoPlantFound extends StatelessWidget {
   final Uint8List imageFile;
@@ -14,12 +11,8 @@ class NoPlantFound extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Plant plant_detail = plantDataList[0];
+    //Plant plant_detail = plantDataList[0];
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('Image Display'),
-      //   backgroundColor: primaryColor,
-      // ),
       body: Column(
         children: [
           Expanded(
@@ -33,7 +26,7 @@ class NoPlantFound extends StatelessWidget {
                   children: [
                     SizedBox(height: 50),
                     Text(
-                      'Plant Not Found!',
+                      'Plant Not Found!'.tr,
                       style: TextStyle(
                         fontSize: 20,
                         fontFamily: fontName,
@@ -45,11 +38,6 @@ class NoPlantFound extends StatelessWidget {
                       height: 10,
                     ),
                     Container(
-                      // decoration: BoxDecoration(
-                      //     border: Border.all(
-                      //       color: primaryColor,
-                      //     ),
-                      //     borderRadius: BorderRadius.all(Radius.circular(20))),
                       margin: EdgeInsets.all(10),
                       padding: EdgeInsets.all(10),
                       height: 300,
