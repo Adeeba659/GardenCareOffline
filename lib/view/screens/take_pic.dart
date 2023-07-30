@@ -182,23 +182,23 @@ class _TakePicState extends State<TakePic> {
 
     if (pickedFile != null) {
       File image = File(pickedFile.path);
-      await _saveImageToGallery(image);
-      await _processPickedImage(image);
+
+      await _processPickedImage(image, isFromCamera: true);
     }
   }
 
   // Function to process the picked image and navigate to appropriate screens
-  Future<void> _processPickedImage(File image) async {
+  Future<void> _processPickedImage(File image,
+      {bool isFromCamera = false}) async {
     setState(() {
       _isLoading = true;
     });
-
     imageFile = await image.readAsBytes();
     Map<String, dynamic> processingResult = await _processImage(image);
     Plant? resultPlant = processingResult['resultPlant'];
     String diseaseStatus = processingResult['diseaseStatus'];
 
-    if (resultPlant?.commonName == 'No Plant detected') {
+    if (resultPlant?.commonName == 'No Plant detected' || resultPlant == null) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -227,6 +227,9 @@ class _TakePicState extends State<TakePic> {
           ),
         ),
       );
+      if (isFromCamera && resultPlant?.commonName != 'No Plant detected') {
+        await _saveImageToGallery(image);
+      }
     }
 
     setState(() {

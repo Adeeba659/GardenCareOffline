@@ -12,7 +12,7 @@ class IdentificationController {
   Future<Plant?> identifyPlant(File file) async {
     file;
 
-    //Plant? identifiedPlant;
+    Plant? identifiedPlant;
 
     //Load the TFLite model
 
@@ -33,7 +33,7 @@ class IdentificationController {
       numResults: 1, // Only retrieve the top result
     );
 
-    //print(recognitions);
+    print(recognitions);
 
     // Parse the recognition result
     String plantName = recognitions != null && recognitions.isNotEmpty
@@ -44,14 +44,13 @@ class IdentificationController {
     String plantCName = plantSplit[0];
     diseaseStatus = plantSplit[1].replaceAll('_', ' ');
 
-    // Get the list of plants
-    List<Plant> plants = await PlantController.fetchPlants();
+    double confidence = recognitions != null && recognitions.isNotEmpty
+        ? recognitions[0]['confidence']
+        : '';
+    //print(confidence);
 
-    // Find the matching plant based on commonName
-    Plant? identifiedPlant = plants.firstWhere(
-      (plant) => plant.commonName == plantCName.tr,
-
-      orElse: () => Plant(
+    if (confidence < 0.95) {
+      identifiedPlant = Plant(
           commonName: 'No Plant detected',
           description: '',
           diseases: [''],
@@ -59,10 +58,30 @@ class IdentificationController {
           diseases_desc: [''],
           treatements: [''],
           plantImage: '',
-          diseaseImage: ['']), // Return null if no element is found
-    );
+          diseaseImage: ['']);
+    } else {
+      // Get the list of plants
+      List<Plant> plants = await PlantController.fetchPlants();
 
-    HistoryController.addHistory(file, identifiedPlant, getDiseaseStatus());
+      // Find the matching plant based on commonName
+      identifiedPlant = plants.firstWhere(
+        (plant) => plant.commonName == plantCName.tr,
+
+        orElse: () => Plant(
+            commonName: 'No Plant detected',
+            description: '',
+            diseases: [''],
+            scientificName: '',
+            diseases_desc: [''],
+            treatements: [''],
+            plantImage: '',
+            diseaseImage: ['']), // Return null if no element is found
+      );
+    }
+
+    if (identifiedPlant.commonName != 'No Plant detected') {
+      HistoryController.addHistory(file, identifiedPlant, getDiseaseStatus());
+    }
 
     // Release the TFLite resources
     Tflite.close();
